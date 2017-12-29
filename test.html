@@ -11,26 +11,57 @@
   <script src="three.js"></script>
   <script>
 
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    var scene, camera, renderer, mesh;
 
-    var renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild( renderer.domElement );
-
-    function resize() {
-      console.log('width: ' + window.innerWidth, 'height: ' + window.innerHeight);
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    function animate() {
-      requestAnimationFrame(this.animate);
-      renderer.render(scene, camera);
-    }
-
-    console.log('width: ' + window.innerWidth, 'height: ' + window.innerHeight);
-    window.addEventListener('resize', resize);
+    init();
     animate();
+
+    function init() {
+
+      scene = new THREE.Scene();
+      
+      camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 10 );
+      camera.position.z = 1;
+      
+      var geometry = new THREE.BoxGeometry( 0.2, 0.2, 0.2 );
+      var material = new THREE.MeshNormalMaterial();
+
+      mesh = new THREE.Mesh( geometry, material );
+      scene.add( mesh );
+      
+      renderer = new THREE.WebGLRenderer( { antialias: true } );
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      renderer.setPixelRatio( window.devicePixelRatio );
+      
+      document.body.appendChild( renderer.domElement );
+      
+      window.addEventListener( 'resize', resize );
+      
+      console.log( 'width: ' + window.innerWidth, 'height: ' + window.innerHeight );
+
+    }
+    
+    function resize() {
+    
+      console.log( 'width: ' + window.innerWidth, 'height: ' + window.innerHeight );
+      
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      
+      renderer.setSize( window.innerWidth, window.innerHeight );
+    
+    }
+    
+    function animate() {
+    
+      requestAnimationFrame( animate );
+      
+      mesh.rotation.x += 0.01;
+      mesh.rotation.y += 0.02;
+
+      renderer.render( scene, camera );
+
+    }
   </script>
 </body>
 </html>
